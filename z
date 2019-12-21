@@ -1,0 +1,9 @@
+<?php
+    include_once './vendor/autoload.php';
+
+    //Move up directory
+    chdir('../');
+
+    //Console manager
+    (new zil\core\Console())->run($argv, $argc, getcwd());
+?>
