@@ -456,9 +456,9 @@ class {$service}{
 
 $code = "<?php
 
-include_once \$_SERVER['DOCUMENT_ROOT'].'/System/vendor/autoload.php';
+include_once \$_SERVER['DOCUMENT_ROOT'].'/zil/vendor/autoload.php';
 include_once \$_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
-include_once \$_SERVER['DOCUMENT_ROOT'].'/System/zil/main.php';
+include_once \$_SERVER['DOCUMENT_ROOT'].'/zil/main.php';
 
 use zil\App;
 {$namespaces}
