@@ -4,7 +4,6 @@
  */
 namespace zil\core;
 
-use src\naijasubweb\model\Product_cat;
 use zil\core\scrapper\Info;
 use zil\core\writer\Component;
 use zil\core\writer\Controller;
