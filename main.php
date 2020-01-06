@@ -59,19 +59,31 @@ class App
              * App Search loop
              * @var [Config]
              */
+
+
+            $AppNames = array_map(
+                function($configObj){
+                    return $configObj->getAppName();
+                },
+                $configs
+            );
+
+            $Tree = new Tree();
+            $defaultApp = $Tree->getTree()->defaultApp;
             foreach ($configs as $k => $x_config) {
                 if (in_array('zil\core\interfaces\Config', class_implements($x_config))) {
                     /**
                      * [Condition Run when first segment of request URI matches doesn't highlight any app. name]
                      * @var [string]
                      */
-                    if (empty($srcBaseIndicator)) {
-                        $defaultApp = (new Tree())->getTree()->defaultApp;
+                    if (empty($srcBaseIndicator) || !is_dir("src/{$srcBaseIndicator}")) {
                         if (!empty($defaultApp)) {
                             if ($defaultApp == $x_config->getAppName()) {
                                 $config = $x_config;
                                 $appFound = true;
                                 break;
+                            }else{
+                                continue;
                             }
                         } else {
                             throw new \Exception("Unknown application, at least provide one default app to load anonymous app");
@@ -96,13 +108,13 @@ class App
             self::$_databaseParams = $config->getDatabaseParams();
             self::$_curAppName = $config->getAppName();
             self::$_eventLog = false;
-            self::$_curSysPath = __DIR__ . '/';
+            self::$_curSysPath = __DIR__ . '/zil/';
 
             /**
              * Get Request base
              */
             self::$_requestBase = '/';
-            if (!(new Tree())->getAppTree($config->getAppName())->default)
+            if ( $Tree->getAppTree($config->getAppName())->name !== $Tree->getTree()->defaultApp)
                 self::$_requestBase = "/" . $config->getAppName() . '/';
 
             /**
