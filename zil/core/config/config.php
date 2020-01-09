@@ -64,7 +64,6 @@ class  Config extends App{
             $this->projectBasePath = parent::$_configOptions['projectBasePath'];
 
         $this->curAppPath       =   $_SERVER['DOCUMENT_ROOT'].$this->projectBasePath.'/'.parent::$_curAppPath;
-
         $this->requestBase      =   rtrim($this->projectBasePath, '/').'/'.parent::$_requestBase;
 
         if( isset(parent::$_configOptions['projectCacheAge']) && parent::$_configOptions['projectCacheAge'] > 0)

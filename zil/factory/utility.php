@@ -4,16 +4,17 @@
 namespace zil\factory;
 
 
+use zil\core\config\Config;
 use zil\core\facades\helpers\Navigator;
 use zil\core\tracer\ErrorTracer;
 
-class Utility
+class Utility extends Config
 {
 
     use Navigator;
 
     private static $fnBox = [];
-    private const UTIL_FN_PROC_LIST_URL = "/System/zil/core/facades/helpers/util.php";
+    private const UTIL_FN_PROC_LIST_URL = "core/facades/helpers/util.php";
 
     public function __construct()
     {
@@ -106,7 +107,9 @@ class Utility
     public static function route(string $route) : string {
         try {
 
-            include_once $_SERVER['DOCUMENT_ROOT'] . self::UTIL_FN_PROC_LIST_URL;
+            $SysPath = (new parent())->getSysPath();
+            include_once $SysPath. DIRECTORY_SEPARATOR. self::UTIL_FN_PROC_LIST_URL;
+
             return \route($route);
 
         } catch (\Throwable $t) {

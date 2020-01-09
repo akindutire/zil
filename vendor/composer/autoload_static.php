@@ -162,6 +162,7 @@ class ComposerStaticInit998bc7168a906f1c357a906d1903f7cc
         'Psr\\SimpleCache\\CacheException' => __DIR__ . '/..' . '/psr/simple-cache/src/CacheException.php',
         'Psr\\SimpleCache\\CacheInterface' => __DIR__ . '/..' . '/psr/simple-cache/src/CacheInterface.php',
         'Psr\\SimpleCache\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/simple-cache/src/InvalidArgumentException.php',
+        'zil\\App' => __DIR__ . '/../..' . '/zil/main.php',
         'zil\\blueprint\\Blueprint' => __DIR__ . '/../..' . '/zil/blueprint/Blueprint.php',
         'zil\\core\\ApplicationManager' => __DIR__ . '/../..' . '/zil/core/applicationmanager.php',
         'zil\\core\\Console' => __DIR__ . '/../..' . '/zil/core/console.php',

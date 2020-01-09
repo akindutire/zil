@@ -48,27 +48,16 @@ class App
 
         try {
             list($srcBaseIndicator) = explode("/", trim($_SERVER['REQUEST_URI'], '/'));
-
             /**
              * Boolean that describes when to break out of app search loop
              * @var boolean
              */
             $appFound = false;
-
             /**
              * App Search loop
              * @var [Config]
              */
-
-
-            $AppNames = array_map(
-                function($configObj){
-                    return $configObj->getAppName();
-                },
-                $configs
-            );
-
-            $Tree = new Tree();
+            $Tree = new Tree;
             $defaultApp = $Tree->getTree()->defaultApp;
             foreach ($configs as $k => $x_config) {
                 if (in_array('zil\core\interfaces\Config', class_implements($x_config))) {
@@ -108,7 +97,7 @@ class App
             self::$_databaseParams = $config->getDatabaseParams();
             self::$_curAppName = $config->getAppName();
             self::$_eventLog = false;
-            self::$_curSysPath = __DIR__ . '/zil/';
+            self::$_curSysPath = __DIR__;
 
             /**
              * Get Request base

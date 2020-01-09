@@ -129,6 +129,7 @@ return array(
     'Psr\\SimpleCache\\CacheException' => $vendorDir . '/psr/simple-cache/src/CacheException.php',
     'Psr\\SimpleCache\\CacheInterface' => $vendorDir . '/psr/simple-cache/src/CacheInterface.php',
     'Psr\\SimpleCache\\InvalidArgumentException' => $vendorDir . '/psr/simple-cache/src/InvalidArgumentException.php',
+    'zil\\App' => $baseDir . '/zil/main.php',
     'zil\\blueprint\\Blueprint' => $baseDir . '/zil/blueprint/Blueprint.php',
     'zil\\core\\ApplicationManager' => $baseDir . '/zil/core/applicationmanager.php',
     'zil\\core\\Console' => $baseDir . '/zil/core/console.php',
