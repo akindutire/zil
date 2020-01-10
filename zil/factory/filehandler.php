@@ -114,17 +114,13 @@ namespace zil\factory;
 		 * @return void
 		 */
 		public function removeDir(  string $dir ) : bool{
-
 			try{
-
 				if(is_dir($dir))
 					$files = new \RecursiveIteratorIterator( new \RecursiveDirectoryIterator($dir), \RecursiveIteratorIterator::CHILD_FIRST);
 				else
 					return false;
 				
-				
 				foreach ( $files as $finfo ){
-					
 					$op = ($finfo->isDir() ? 'rmdir' : 'unlink');
 					if($op == 'unlink'){
 						if(file_exists($finfo->getRealPath()))
@@ -142,12 +138,9 @@ namespace zil\factory;
 				return true;
 			
 			}catch(\OutOfRangeException $t){
-				
 				new ErrorTracer($t);
 			}catch(\LogicException $t){
-				
 				new ErrorTracer($t);
-
 			}catch(\Error $t){
 				new ErrorTracer($t);
 			}
@@ -162,12 +155,10 @@ namespace zil\factory;
 		 */
 		public function rename(  string $old_dir,  string $new_dir ) : bool {
 			try{
-
 				if( ( !is_dir($old_dir) || !is_file($old_dir) ) && ( !is_dir($new_dir) || !is_file($new_dir) ) )
 					throw new \OutOfRangeException("[Expected]: A valid file, Invalid file name giver, file not found");
 
-				return rename($old_dir, $new_dir);	
-
+				return rename($old_dir, $new_dir);
 			}catch(\OutOfRangeException $t){
 				new ErrorTracer($t);
 			}catch(\LogicException $t){
@@ -186,14 +177,11 @@ namespace zil\factory;
 		 * @return void
 		 */
 		public function openFile(  string $filename,  string $width='200px',  string $height='auto') :  string {
-
 			try{
-
 				if(!file_exists($filename))
 					throw new \OutOfRangeException("[Expected]: A valid file, Invalid file name giver, file not found");
 
-
-				$type = mime_content_type("{$_SERVER['DOCUMENT_ROOT']}{$filename}");
+				$type = mime_content_type("{$filename}");
 				
 				$string = null;
 
@@ -208,9 +196,7 @@ namespace zil\factory;
 				}else if($type == 'audio/vnd.dts' || $type == 'audio/mpeg' || $type=='audio/mp4' || $type=='audio/ogg' || $type=='audio/x-pn-realaudio' || $type=='audio/wav' || $type=='audio/mp3'){
 
 					if ($type == 'audio/mp3') {
-					
 						$type = 'audio/mpeg';
-					
 					}
 
 					$string = "<audio src='$filename' controls style=''></audio>";

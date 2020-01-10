@@ -125,7 +125,8 @@ class Utility extends Config
     public static function asset($resource) : string {
         try {
 
-            include_once $_SERVER['DOCUMENT_ROOT'] . self::UTIL_FN_PROC_LIST_URL;
+            $SysPath = (new parent())->getSysPath();
+            include_once $SysPath. DIRECTORY_SEPARATOR. self::UTIL_FN_PROC_LIST_URL;
             return \asset($resource);
 
         } catch (\Throwable $t){
@@ -140,7 +141,8 @@ class Utility extends Config
     public static function report(int $reportType){
         try {
 
-            include_once $_SERVER['DOCUMENT_ROOT'] . self::UTIL_FN_PROC_LIST_URL;
+            $SysPath = (new parent())->getSysPath();
+            include_once $SysPath. DIRECTORY_SEPARATOR. self::UTIL_FN_PROC_LIST_URL;
             \report($reportType);
 
         } catch (\Throwable $t){
@@ -156,7 +158,8 @@ class Utility extends Config
     public static function shared($resource) : string {
         try {
 
-            include_once $_SERVER['DOCUMENT_ROOT'] . self::UTIL_FN_PROC_LIST_URL;
+            $SysPath = (new parent())->getSysPath();
+            include_once $SysPath. DIRECTORY_SEPARATOR. self::UTIL_FN_PROC_LIST_URL;
             return \shared($resource);
 
         } catch (\Throwable $t){
@@ -171,7 +174,8 @@ class Utility extends Config
     public static function uresource($resource) : string {
         try {
 
-            include_once $_SERVER['DOCUMENT_ROOT'] . self::UTIL_FN_PROC_LIST_URL;
+            $SysPath = (new parent())->getSysPath();
+            include_once $SysPath. DIRECTORY_SEPARATOR. self::UTIL_FN_PROC_LIST_URL;
             return \uresource($resource);
 
         } catch (\Throwable $t){

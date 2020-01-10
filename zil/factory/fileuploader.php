@@ -24,27 +24,18 @@ namespace zil\factory;
 		 * @return Fileuploader
 		 */
         public function upload(array $data=[]): Fileuploader {
-
 			/**
-			*
 			*	Array Format as ['file'=>resource file,'size'=>expected_size in byte,'type'=>[expected_type1,expected_type2],destination=>path,compress=>true]
-			*
 			*/
-
 			try{
-
 				self::$ERROR = null;
 				self::$ERR_CODE = null;
-
 				/** @ $file  Binary file, comprising size, tmp, and name*/
 				$file = $data['file'];
-
 				/** Temporary file location provided by php file upload mechanism*/
 				$tmp = $file['tmp_name'];
-
 				if(array_key_exists('compress',$data) != true)
 					$data['compress'] = false;
-					
 
 				if($this->checkFileValid($tmp) === false){
 					
@@ -310,10 +301,9 @@ namespace zil\factory;
 		 * @param string $file
 		 * @param string $destination
 		 * @param integer $quality
-		 * @return void
+		 * @return bool
 		 */
-		private function compressImg(string $file, string $destination, int $quality){
-			
+		private function compressImg(string $file, string $destination, int $quality) : bool{
 
 				try {
 
@@ -358,7 +348,7 @@ namespace zil\factory;
 					new ErrorTracer($t);
 				}catch(\Exception $t){
 					new ErrorTracer($t);
-				}catch (\Throwable $e) {
+				}catch (\Throwable $t) {
 					new ErrorTracer($t);
 				}
 			
