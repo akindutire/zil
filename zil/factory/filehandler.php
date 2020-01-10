@@ -179,48 +179,31 @@ namespace zil\factory;
 		public function openFile(  string $filename,  string $width='200px',  string $height='auto') :  string {
 			try{
 				if(!file_exists($filename))
-					throw new \OutOfRangeException("[Expected]: A valid file, Invalid file name giver, file not found");
+					throw new \OutOfRangeException("[Expected]: A valid file, Invalid file name given, file not found");
 
 				$type = mime_content_type("{$filename}");
-				
+				$filename = str_replace($_SERVER['DOCUMENT_ROOT'], '', $filename);
 				$string = null;
-
 				if($type == 'image/jpeg' || $type == 'image/gif' || $type == 'image/bmp' || $type == 'image/png' || $type == 'image/webp' || $type == 'image/jpg'){
-
 					$string = "<img style='' src='$filename' width='$width' height='$height'>";
-
 				}else if ($type == 'video/3gpp' || $type == 'video/jpm' || $type=='video/jpeg' || $type=='video/mp4' || $type=='video/mpeg' || $type=='video/x-matroska' || $type=='video/quicktime' || $type=='video/ogg' || $type=='video/webm') {
-
 					$string = "<video style='' src='$filename' width='$width' height='$height' controls></video>";
-					
 				}else if($type == 'audio/vnd.dts' || $type == 'audio/mpeg' || $type=='audio/mp4' || $type=='audio/ogg' || $type=='audio/x-pn-realaudio' || $type=='audio/wav' || $type=='audio/mp3'){
-
 					if ($type == 'audio/mp3') {
 						$type = 'audio/mpeg';
 					}
-
 					$string = "<audio src='$filename' controls style=''></audio>";
-
 				}else if($type == 'application/msword' || $type == 'application/vnd.ms-word.document.macroenabled.12' || $type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'){
-
-					$string = "<button style='border:none; background: mediumslateblue;' id='btn' href='$filename'>Open File</button>";
-
+					$string = "<a style='border:none; background: mediumslateblue; padding:4px;' id='btn' href='$filename'>Open File</a>";
 				}else if($type == 'application/vnd.ms-powerpoint' || $type =='application/vnd.ms-powerpoint.template.macroenabled.12' || $type =='application/vnd.openxmlformats-officedocument.presentationml.template' || $type == 'application/vnd.ms-powerpoint.addin.macroenabled.12' || $type == 'application/vnd.cups-ppd' || $type == 'image/x-portable-pixmap' || $type == 'application/vnd.ms-powerpoint' || $type == 'application/vnd.ms-powerpoint.slideshow.macroenabled.12' || $type == 'application/vnd.openxmlformats-officedocument.presentationml.slideshow' || $type == 'application/vnd.ms-powerpoint' || $type == 'application/vnd.ms-powerpoint.presentation.macroenabled.12' || $type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation'){
-
-						$string = "<a  style='border:none; background: mediumslateblue;' id='btn' href='$filename'>Open File</a>";
-
+						$string = "<a  style='border:none; background: mediumslateblue; padding:4px;' id='btn' href='$filename'>Open File</a>";
 				}else if ($type == 'application/pdf') {
-					
 					$string = "<iframe style='' width='$width' height='$height' src='$filename' style='border:none;'></iframe>";
 				}
-
 				return $string;
-
 			}catch(\OutOfRangeException $t){
 				new ErrorTracer($t);
-			}catch(\LogicException $t){
-				new ErrorTracer($t);
-			}catch(\Error $t){
+			}catch(\Throwable $t){
 				new ErrorTracer($t);
 			}
 		}
