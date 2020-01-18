@@ -9,20 +9,13 @@ use zil\core\config\Config;
 use zil\core\tracer\ErrorTracer;
 use zil\core\scrapper\Info;
 
-
-
 	class BuildQuery extends Config{
 
-
-		private $Instance = null; 
-
-		private static $connection_handle 	= 	null;	
-		
+		private $Instance = null;
+		private static $connection_handle 	= 	null;
 		private $lastLogicalOfConditionString 	=	null;
-
 		private $ConditionString 	= 	null;
 		private $ConditionValue 	= 	[];
-
 
 		public function __construct($connection_handle){
 			try{
@@ -39,8 +32,6 @@ use zil\core\scrapper\Info;
          * @return BuildQuery
          */
         private function getInstance() : self {
-
-
 			if($this->Instance == null)
 				$this->Instance = new self(self::$connection_handle);
 
@@ -55,9 +46,7 @@ use zil\core\scrapper\Info;
 		 * @return boolean|null
 		 */
 		public function create(string $table, array $data = []): ?bool{
-
 			try {
-				
 				if(is_null(self::$connection_handle))
 					throw new \PDOException("Database Resource not found");
 				
@@ -67,7 +56,6 @@ use zil\core\scrapper\Info;
 				$i=1; 
 				$variable_space = null;
 				while ($i <= sizeof($data)) {
-				
 					$variable_space.='?,';
 					$i++;
 				}
@@ -87,20 +75,14 @@ use zil\core\scrapper\Info;
 				}else{
 					throw new \PDOException();
 				}
-
-			}catch(\Exception $e){	   
-				
+			}catch(\Exception $e){
 				new ErrorTracer($e);
 			}catch(\PDOException $e){
-				
 				new ErrorTracer($e);
 			}catch (\Throwable $e) {
-				new ErrorTracer($e);	
-
+				new ErrorTracer($e);
 			}
-
 			return null;
-			
 		}
 
         /**
@@ -111,9 +93,7 @@ use zil\core\scrapper\Info;
          * @return object
          */
         public function read(string $table, array $data = [], array $data_field_to_select=[], array $extra=[]) : object {
-			
 			try{
-				
 				if(is_null(self::$connection_handle))
 					throw new \PDOException("Database Resource not found");
 
@@ -125,11 +105,9 @@ use zil\core\scrapper\Info;
 				
 				if(!\is_array($extra))
 					throw new \Exception("Argument #4 expect a 1D array, ".gettype($extra)." given");
-					
 
 				$field_to_select = '*';
 				if (sizeof($data_field_to_select) != 0) {
-					
 					if(!is_string($data_field_to_select[0]))
 						throw new \Exception("Argument #3 elements expect a string, ".gettype($data_field_to_select)." given");
 
@@ -138,11 +116,8 @@ use zil\core\scrapper\Info;
 				}
 
 				$extra_query =  sizeof($extra) != 0 ? $extra[0] : null;
-				
 				$query = "SELECT {$field_to_select} FROM {$table} {$extra_query}";
-
 				$ConditionAndValue = ['condition'=>'','value'=>[]];
-
 				if ( sizeof($data) != 0 ) {
 					$ConditionAndValue = ($this->getInstance())->extractCondition($data);
 					$condition = $ConditionAndValue['condition'];
@@ -152,29 +127,21 @@ use zil\core\scrapper\Info;
 				Logger::QLog($query);
 				
 				$rs = self::$connection_handle->prepare($query);
-				
 				if ($rs->execute($ConditionAndValue['value']) !== false){
 					unset($ConditionAndValue);
 
 					return $rs;
-
 				}else{
 					throw new \PDOException("Error: Couldn't execute Query");
 				}
-
-			
-			}catch(\Exception $e){	   
-				
+			}catch(\Exception $e){
 				new ErrorTracer($e);
-				
 			}catch(\PDOException $e){
 				new ErrorTracer($e);
 			}catch (\Throwable $e) {
 				new ErrorTracer($e);
 			}
-
 			return null;
-            
 		}
 
         /**
@@ -187,7 +154,6 @@ use zil\core\scrapper\Info;
         public function update(string $table, ?array $data=[ [ [ ] ] ], ?array $data_field_to_update=[ [] ], ?array $extra=[]) : object {
 			
 			try{
-
 				if(is_null(self::$connection_handle))
 						throw new \PDOException("Database Resource not found");
 
@@ -200,11 +166,9 @@ use zil\core\scrapper\Info;
 				if(!\is_array($extra))
 					throw new \Exception("Argument #4 expect an array, ".gettype($extra)." given");
 
-
 				$field_to_update = null;
 				$UpdateVal = [];
 				foreach ($data_field_to_update as $field_update_array) {
-
 					if (!is_array($field_update_array) && sizeof($field_update_array) != 2)
 						throw new \Exception("SQL Error: Expecting Nested Array as Arguement, Expecting two(2) parameters");
 							

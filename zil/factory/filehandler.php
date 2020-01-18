@@ -198,7 +198,7 @@ namespace zil\factory;
 				}else if($type == 'application/vnd.ms-powerpoint' || $type =='application/vnd.ms-powerpoint.template.macroenabled.12' || $type =='application/vnd.openxmlformats-officedocument.presentationml.template' || $type == 'application/vnd.ms-powerpoint.addin.macroenabled.12' || $type == 'application/vnd.cups-ppd' || $type == 'image/x-portable-pixmap' || $type == 'application/vnd.ms-powerpoint' || $type == 'application/vnd.ms-powerpoint.slideshow.macroenabled.12' || $type == 'application/vnd.openxmlformats-officedocument.presentationml.slideshow' || $type == 'application/vnd.ms-powerpoint' || $type == 'application/vnd.ms-powerpoint.presentation.macroenabled.12' || $type == 'application/vnd.openxmlformats-officedocument.presentationml.presentation'){
 						$string = "<a  style='border:none; background: mediumslateblue; padding:4px;' id='btn' href='$filename'>Open File</a>";
 				}else if ($type == 'application/pdf') {
-					$string = "<iframe style='' width='$width' height='$height' src='$filename' style='border:none;'></iframe>";
+					$string = "<a style='border:none; background: mediumslateblue; padding:4px;' id='btn' href='$filename'>Open File</a>";
 				}
 				return $string;
 			}catch(\OutOfRangeException $t){
