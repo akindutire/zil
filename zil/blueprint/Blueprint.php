@@ -48,6 +48,11 @@ class Blueprint{
 
              public function __construct(){  }
 
+             /** Specify allowed host to your app */
+             public function getCorsPolicy() : array { 
+                return ['*'] 
+             }
+
              /**
               * Specify app name and expected to be unique
               *

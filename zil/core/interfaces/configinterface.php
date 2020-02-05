@@ -8,6 +8,8 @@ interface Config{
     public function getDatabaseParams():array;
 
     public function options(): array;
+
+    public function getCorsPolicy(): array;
 }
 
 ?>

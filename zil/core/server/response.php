@@ -125,13 +125,18 @@ class Response extends Config{
              * CSRF Middleware
              */
 
-             if( empty($sapi) && sizeof( (array)$requestFrame['post_params']) > 0 ) {
+             if( empty($sapi) && sizeof( (array)$requestFrame['post_params']) > 0) {
+                 $CorsPolicy = (new Config())->getCorsPolicy();
 
-                if(!isset($requestFrame['form_params']->CSRF_FLAG))
-                    throw new CorsException('Data transfer request a valid CSRF token, NULL given');
+                if( in_array($_SERVER['HTTP_HOST'], $CorsPolicy) || in_array('*', $CorsPolicy)){
+                }else{
 
-                if ( new Csrf($requestFrame['form_params']->CSRF_FLAG) == false )
-                    throw new CorsException('Insecure form data transfer, CSRF token missing');
+                    if (!isset($requestFrame['form_params']->CSRF_FLAG))
+                        throw new CorsException('Data transfer request a valid CSRF token, NULL given');
+
+                     if (new Csrf($requestFrame['form_params']->CSRF_FLAG) == false)
+                         throw new CorsException('Insecure form data transfer, CSRF token missing');
+                }
              }
 
              if($requestFrame['as-view']){

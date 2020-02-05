@@ -11,6 +11,7 @@ class  Config extends App{
     protected  $projectBasePath = '';
     protected  $projectCacheAge = 40;
     protected  $configOptions = [ 'pageLoadStrategy'=>'default' ];
+    protected $corsPolicy = ['*'];
 
     /**
      * Database Options
@@ -59,6 +60,7 @@ class  Config extends App{
 
         $this->configOptions    =   parent::$_configOptions;
         $this->curSysPath       =   parent::$_curSysPath;
+        $this->corsPolicy       =   parent::$_corsPolicy;
 
         if( isset(parent::$_configOptions['projectBasePath']) )
             $this->projectBasePath = parent::$_configOptions['projectBasePath'];
@@ -88,6 +90,10 @@ class  Config extends App{
 
     public function getCurAppName() : string {
         return $this->curAppName;
+    }
+
+    public function getCorsPolicy() : array {
+        return self::$_corsPolicy;
     }
 
     public function getRequestBase() : string {

@@ -31,6 +31,8 @@ class App
     protected static $_eventLog = true;
     protected static $_requestBase = null;
     protected static $_configOptions = [];
+    protected static $_corsPolicy = [];
+
     /**
      * @var Config
      */
@@ -98,6 +100,7 @@ class App
             self::$_curAppName = $config->getAppName();
             self::$_eventLog = false;
             self::$_curSysPath = __DIR__;
+            self::$_corsPolicy = $config->getCorsPolicy();
 
             /**
              * Get Request base
