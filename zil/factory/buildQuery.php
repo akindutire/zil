@@ -17,7 +17,7 @@ use zil\core\scrapper\Info;
 		private $ConditionString 	= 	null;
 		private $ConditionValue 	= 	[];
 
-		public function __construct($connection_handle){
+		public function __construct(\PDO $connection_handle){
 			try{
 				if($connection_handle != null)
 					self::$connection_handle = $connection_handle;
@@ -45,30 +45,36 @@ use zil\core\scrapper\Info;
 		 * @param array| $data
 		 * @return boolean|null
 		 */
-		public function create(string $table, array $data = []): ?bool{
+		public function create(string $table, array $data = [ [] ]): ?bool{
 			try {
 				if(is_null(self::$connection_handle))
 					throw new \PDOException("Database Resource not found");
 				
 				if(!is_array($data))
 					throw new \Exception("Argument #2 expect an array, ".gettype($data)." given");
-					
-				$i=1; 
-				$variable_space = null;
-				while ($i <= sizeof($data)) {
-					$variable_space.='?,';
-					$i++;
-				}
 
+				//Initialize the column placeholder
+				$variable_space = null;
+				//Prepare the column placeholders
+				foreach ($data as $column){
+					$variable_space.=":{$column['key']},";
+				}
+				//Clean last placeholder
 				$variable_space = rtrim($variable_space,',');
+				//Build the query
 				$query = "INSERT INTO $table VALUES($variable_space)";
-				Logger::QLog($query);
-						
+				//Log the query and its data
+				Logger::QLog($query, $data);
+				//Prepare query for execution
 				$rs = self::$connection_handle->prepare($query);
+				//Bind data to query placeholders
+				foreach ($data as $column){
+
+					$variable_space.=":{$column['key']},";
+				}
 				$rs->execute($data);
 
 				Info::$_dataLounge["zdx_0xc4_last_insert_into_{$table}"] = self::$connection_handle->lastInsertId();
-				// Session::build( "zdx_0xc4_last_insert_into_{$table}", self::$connection_handle->lastInsertId(), true  );
 
 				if ($rs->rowCount() == 1){	
 					return true;

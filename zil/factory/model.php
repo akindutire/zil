@@ -11,8 +11,6 @@ namespace zil\factory;
     use \PDO;
 
 	trait Model{
-        
-
 
         protected $zdx_Take = 0;
 
@@ -63,11 +61,15 @@ namespace zil\factory;
                     
                     $db = (new Database())->connect();
                     $sql = new BuildQuery($db);
+                    $TableColumns = $sql->getTableCols(self::$table);
 
                     $new_model_attribs = array_map( function ($col){
-                        return $this->{$col};
-                    } , $sql->getTableCols(self::$table) );
+                        return ["key"=>$col, "value"=>$this->{$col}];
+                    } , $TableColumns );
 
+                    var_dump($new_model_attribs);
+
+                    die();
                     $rs = $sql->create(self::$table,  $new_model_attribs);
 
                     return $rs;
