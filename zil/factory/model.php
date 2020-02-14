@@ -58,18 +58,19 @@ namespace zil\factory;
             try{
 
                 if(!empty(self::$table)){
-                    
+                    //Connect to a particular database engine
                     $db = (new Database())->connect();
+                    //Inject database dependency for query building and execution
                     $sql = new BuildQuery($db);
+                    //Extract table columns
                     $TableColumns = $sql->getTableCols(self::$table);
 
+                    //Bind data to table columns
                     $new_model_attribs = array_map( function ($col){
                         return ["key"=>$col, "value"=>$this->{$col}];
                     } , $TableColumns );
 
-                    var_dump($new_model_attribs);
-
-                    die();
+                    //Build, Prepare and Execute query on data
                     $rs = $sql->create(self::$table,  $new_model_attribs);
 
                     return $rs;

@@ -53,37 +53,34 @@ use zil\core\scrapper\Info;
 				if(!is_array($data))
 					throw new \Exception("Argument #2 expect an array, ".gettype($data)." given");
 
-				//Initialize the column placeholder
+				//Initialize the column placeholder and payload
 				$variable_space = null;
+				$payload = [];
 				//Prepare the column placeholders
 				foreach ($data as $column){
 					$variable_space.=":{$column['key']},";
+					$payload[":{$column['key']}"] = $column['value'];
 				}
 				//Clean last placeholder
 				$variable_space = rtrim($variable_space,',');
 				//Build the query
 				$query = "INSERT INTO $table VALUES($variable_space)";
+				unset($variable_space);
 				//Log the query and its data
 				Logger::QLog($query, $data);
-				//Prepare query for execution
+				//Prepare query as PDOStatement for execution
 				$rs = self::$connection_handle->prepare($query);
-				//Bind data to query placeholders
-				foreach ($data as $column){
-
-					$variable_space.=":{$column['key']},";
-				}
-				$rs->execute($data);
-
+				//Execute query
+				$rs->execute($payload);
+				//Save last auto id inserted for this table
 				Info::$_dataLounge["zdx_0xc4_last_insert_into_{$table}"] = self::$connection_handle->lastInsertId();
 
-				if ($rs->rowCount() == 1){	
+				if ($rs->rowCount() == 1){
 					return true;
 				}else{
-					throw new \PDOException();
+					throw new \PDOException( implode("|", self::$connection_handle->errorInfo()));
 				}
-			}catch(\Exception $e){
-				new ErrorTracer($e);
-			}catch(\PDOException $e){
+			}catch(\Exception | \PDOException$e){
 				new ErrorTracer($e);
 			}catch (\Throwable $e) {
 				new ErrorTracer($e);
@@ -140,9 +137,7 @@ use zil\core\scrapper\Info;
 				}else{
 					throw new \PDOException("Error: Couldn't execute Query");
 				}
-			}catch(\Exception $e){
-				new ErrorTracer($e);
-			}catch(\PDOException $e){
+			}catch(\PDOException | \Exception $e){
 				new ErrorTracer($e);
 			}catch (\Throwable $e) {
 				new ErrorTracer($e);
@@ -198,7 +193,6 @@ use zil\core\scrapper\Info;
 					
 				$rs = self::$connection_handle->prepare($query);
 				
-				
 				if ($rs->execute(  array_merge($UpdateVal, $ConditionAndValue['value'])  ) != false){
 					unset($ConditionAndValue, $UpdateVal);
 					return $rs;
@@ -207,17 +201,11 @@ use zil\core\scrapper\Info;
 					throw new \PDOException("Couldn't execute Query");
 				}
 
-			}catch(\PDOException $e){
+			}catch(\PDOException | \Exception $e){
 				new ErrorTracer($e);
-
-			}catch (\Exception $e) {
-				new ErrorTracer($e);
-
 			}catch(\Throwable $e){	   
                 new ErrorTracer($e);
-
 			}
-
 			return null;
             
 		}
@@ -231,7 +219,6 @@ use zil\core\scrapper\Info;
 		 * @return object
 		 */
 		public function delete(string $table, ?array $data=[ [ [ ] ] ], ?array $extra=[]) : object {
-		
 			try{
 
 				if(is_null(self::$connection_handle))
@@ -263,19 +250,13 @@ use zil\core\scrapper\Info;
 					unset($ConditionAndValue);
 					return $rs;
 				}else{
-					throw new \PDOException("Error: Couldn't execute Query");					
+					throw new \PDOException(implode(" | " , $rs->errorInfo()));
 				}
-				
 
-			}catch(\PDOException $e){
+			}catch(\PDOException | \Exception $e){
 				new ErrorTracer($e);
-
-			}catch (\Exception $e) {
-				new ErrorTracer($e);
-
 			}catch(\Throwable $e){	   
                 new ErrorTracer($e);
-
 			}
 		
 			return null;
@@ -309,15 +290,10 @@ use zil\core\scrapper\Info;
 					throw new \PDOException("Error: Couldn't execute Query");
                 }
 
-            }catch(\PDOException $e){
+            }catch(\PDOException | \Exception $e){
 				new ErrorTracer($e);
-
-			}catch (\Exception $e) {
-				new ErrorTracer($e);
-
-			}catch(\Throwable $e){	   
+			}catch(\Throwable $e){
                 new ErrorTracer($e);
-
 			}
 			
 			return null;
@@ -326,26 +302,20 @@ use zil\core\scrapper\Info;
 		/**
 		 * Provide columns of table
 		 *
-		 * @param [type] $table
+		 * @param [string] $table
 		 * @return array
 		 */
 		public function getTableCols(string $table) : array {
             try{
-
                 if(!empty($table)){
-                    
                     $db = (new parent())->dbParams;
-                    $pdohandle = (new Database())->connect();
-
+					$pdohandle = self::$connection_handle;
                     
                     if($db['driver'] == 'mysql' || $db['driver'] == 'pgsql' || $db['driver'] == 'mssql'){
-
-                        $rs = $pdohandle->query("SELECT COLUMN_NAME FROM  INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='{$db['database']}' AND TABLE_NAME = '{$table}'");
+                        $rs = $pdohandle->query("SELECT COLUMN_NAME FROM  INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='{$db['database']}' AND TABLE_NAME = '{$table}' ORDER BY ORDINAL_POSITION");
                     }else if($db['driver'] == 'sqlite'){
-                        
                         $rs = $pdohandle->query("SELECT name FROM pragma_table_info('$table')");
                     }else if($db['driver'] == 'oracle'){
-                    
                         $rs = $pdohandle->query("SELECT COULUMN_NAME FROM  ALL_TAB_COLUMNS WHERE TABLE_NAME = '{$table}'");
                     }
 
@@ -510,22 +480,11 @@ use zil\core\scrapper\Info;
 					return;
 				
 				}/*Endif*/
-			
-			}catch(\PDOException $e){
-				new ErrorTracer($e);
 
-			}catch (\Exception $e) {
+			}catch (\PDOException | \DomainException | \InvalidArgumentException | \Exception $e) {
 				new ErrorTracer($e);
-
-			}catch (\DomainException $e) {
-				new ErrorTracer($e);
-
-			}catch (\InvalidArgumentException $e) {
-				new ErrorTracer($e);
-
-			}catch(\Throwable $e){	   
+			}catch(\Throwable $e){
                 new ErrorTracer($e);
-
 			}
 
 		}/*EndextractCondition*/ 
@@ -562,10 +521,8 @@ use zil\core\scrapper\Info;
 
 			}catch (\Exception $e) {
 				new ErrorTracer($e);
-
 			}catch(\Throwable $e){
                 new ErrorTracer($e);
-
 			}
 		}
 
